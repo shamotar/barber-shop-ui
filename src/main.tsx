@@ -14,6 +14,7 @@ import AboutUsPage from './pages/AboutUs';
 import PrivateRoute from './PrivateRoute';
 import Booking from './pages/Booking';
 import AppointmentConfirmation from './pages/AppointmentConfirmation';
+import Appointment from './pages/Appointment';
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -25,6 +26,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Routes>
             <Route index element={<App />} />
             <Route path="about" element={<AboutUsPage />} />
+            <Route path="appointments/:appointmentId" element={<PrivateRoute roles={[]} children={<Appointment />} />} />
             <Route path="appointments/:appointmentId/confirm" element={<PrivateRoute roles={[]} children={<AppointmentConfirmation />} />} />
             <Route path="book-appointment" element={<PrivateRoute roles={[]} children={<Booking />} />} />
             <Route path="services" element={<Services />} />
