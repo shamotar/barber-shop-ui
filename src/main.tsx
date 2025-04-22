@@ -16,6 +16,10 @@ import Booking from './pages/Booking';
 import AppointmentConfirmation from './pages/AppointmentConfirmation';
 import Appointment from './pages/Appointment';
 import Appointments from './pages/Appointments';
+import { MeProvider } from './context/MeContext';
+import ProfileInfo from './pages/ProfileInfo';
+import { SnackBarProvider } from './context/SnackBarContext';
+import UpdatePassword from './pages/UpdatePassword';
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -24,19 +28,25 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <KeycloakProvider>
-          <Routes>
-            <Route index element={<App />} />
-            <Route path="about" element={<AboutUsPage />} />
-            <Route path="appointments" element={<PrivateRoute roles={[]} children={<Appointments />} />} />
-            <Route path="appointments/:appointmentId" element={<PrivateRoute roles={[]} children={<Appointment />} />} />
-            <Route path="appointments/:appointmentId/confirm" element={<PrivateRoute roles={[]} children={<AppointmentConfirmation />} />} />
-            <Route path="book-appointment" element={<PrivateRoute roles={[]} children={<Booking />} />} />
-            <Route path="services" element={<Services />} />
-            <Route path="signup" element={<Signup />} />
-            <Route path="schedules" element={<PrivateRoute roles={["barber"]} children={<ScheduleManagementPage />} />} />
-            <Route path="schedules/new" element={<PrivateRoute roles={["barber"]} children={<BarberSchedule />} />} />
-            <Route path="schedules/:scheduleId" element={<PrivateRoute roles={["barber"]} children={<BarberSchedule />} />} />
-          </Routes>
+          <MeProvider>
+            <SnackBarProvider>
+              <Routes>
+                <Route index element={<App />} />
+                <Route path="about" element={<AboutUsPage />} />
+                <Route path="appointments" element={<PrivateRoute roles={[]} children={<Appointments />} />} />
+                <Route path="appointments/:appointmentId" element={<PrivateRoute roles={[]} children={<Appointment />} />} />
+                <Route path="appointments/:appointmentId/confirm" element={<PrivateRoute roles={[]} children={<AppointmentConfirmation />} />} />
+                <Route path="book-appointment" element={<PrivateRoute roles={[]} children={<Booking />} />} />
+                <Route path="profile" element={<PrivateRoute roles={[]} children={<ProfileInfo />} />} />
+                <Route path="profile/update-password" element={<PrivateRoute roles={[]} children={<UpdatePassword />} />} />
+                <Route path="services" element={<Services />} />
+                <Route path="signup" element={<Signup />} />
+                <Route path="schedules" element={<PrivateRoute roles={["barber"]} children={<ScheduleManagementPage />} />} />
+                <Route path="schedules/new" element={<PrivateRoute roles={["barber"]} children={<BarberSchedule />} />} />
+                <Route path="schedules/:scheduleId" element={<PrivateRoute roles={["barber"]} children={<BarberSchedule />} />} />
+              </Routes>
+            </SnackBarProvider>
+          </MeProvider>
         </KeycloakProvider>
       </ThemeProvider>
     </BrowserRouter>
