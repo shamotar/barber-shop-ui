@@ -26,7 +26,6 @@ import { BarberResponse, createAppointmentApiV1AppointmentsPost, getAllBarbersAp
 import { fetchServices, Service } from "../effects/services";
 import { getSchedules, Schedule, TimeSlot } from "../effects/schedule";
 import { AppointmentStatus } from "../api/types.gen";
-import BookingConfirmation from "../components/BookingConfirmation"
 import { useNavigate } from "react-router";
 
 const Booking = () => {
