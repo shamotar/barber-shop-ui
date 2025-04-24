@@ -1,4 +1,4 @@
-import { deleteAppointmentApiV1AppointmentsAppointmentIdDelete, getAppointmentApiV1AppointmentsAppointmentIdGet, getAppointmentsApiV1AppointmentsGet } from "../api";
+import { AppointmentResponse, deleteAppointmentApiV1AppointmentsAppointmentIdDelete, getAppointmentApiV1AppointmentsAppointmentIdGet, getAppointmentsApiV1AppointmentsGet, getPastAppointments, getUpcomingAppointments } from "../api";
 
 export async function fetchAppointment(
   authToken: string,
@@ -27,26 +27,60 @@ export async function fetchAppointment(
 
 export async function fetchAppointments(
   authToken: string,
+  page: number,
+  limit: number,
   userId?: number,
-  barberId?: number
-): Promise<any[]> {
+  barberId?: number,
+  upcoming?: boolean,
+  past?: boolean
+): Promise<AppointmentResponse[]> {
+  const headers = {
+    Authorization: `Bearer ${authToken}`,
+  };
+  const query = {
+    page,
+    limit,
+    user_id: userId,
+    barber_id: barberId,
+  };
   try {
-    const { response, data } = await getAppointmentsApiV1AppointmentsGet({
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-      query: {
-        page: 1,
-        limit: 100,
+    if (upcoming) {
+      const { response, data } = await getUpcomingAppointments({
+        headers,
+        query,
+      });
+      if (!response.ok) {
+        throw new Error("Failed to load appointments. Please try again later.");
       }
-    });
-    if (!response.ok) {
-      throw new Error("Failed to load appointments. Please try again later.");
+      if (!data) {
+        throw new Error("Failed to load appointments. Please try again later.");
+      }
+      return data;
+    } else if (past) {
+      const { response, data } = await getPastAppointments({
+        headers,
+        query,
+      });
+      if (!response.ok) {
+        throw new Error("Failed to load appointments. Please try again later.");
+      }
+      if (!data) {
+        throw new Error("Failed to load appointments. Please try again later.");
+      }
+      return data;
+    } else {
+      const { response, data } = await getAppointmentsApiV1AppointmentsGet({
+        headers,
+        query,
+      });
+      if (!response.ok) {
+        throw new Error("Failed to load appointments. Please try again later.");
+      }
+      if (!data) {
+        throw new Error("Failed to load appointments. Please try again later.");
+      }
+      return data;
     }
-    if (!data) {
-      throw new Error("Failed to load appointments. Please try again later.");
-    }
-    return data;
   } catch (err) {
     throw new Error("Failed to load appointments. Please try again later.");
   }

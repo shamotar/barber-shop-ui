@@ -82,12 +82,14 @@ const ServicesList: React.FC<ServicesProps> = ({
         }
         const services: Service[] = [];
         for (const service of data) {
-          console.log(service.duration);
           services.push({
             service_id: service.service_id,
             name: service.name,
             duration: service.duration,
             price: parseFloat(service.price),
+            description: service.description,
+            category: service.category,
+            popularityScore: service.popularity_score,
           });
         }
 

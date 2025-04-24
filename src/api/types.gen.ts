@@ -913,6 +913,8 @@ export type GetAppointmentsApiV1AppointmentsGetData = {
     query: {
         page: number;
         limit: number;
+        user_id?: number;
+        barber_id?: number;
     };
     url: '/api/v1/appointments';
 };
@@ -967,6 +969,74 @@ export type CreateAppointmentApiV1AppointmentsPostResponses = {
 };
 
 export type CreateAppointmentApiV1AppointmentsPostResponse = CreateAppointmentApiV1AppointmentsPostResponses[keyof CreateAppointmentApiV1AppointmentsPostResponses];
+
+export type GetUpcomingAppointmentsData = {
+    body?: never;
+    path?: never;
+    query: {
+        page: number;
+        limit: number;
+        user_id?: number;
+        barber_id?: number;
+    };
+    url: '/api/v1/appointments/upcoming';
+};
+
+export type GetUpcomingAppointmentsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+    /**
+     * Internal Server Error
+     */
+    500: ErrorResponse;
+};
+
+export type GetUpcomingAppointmentsError = GetUpcomingAppointmentsErrors[keyof GetUpcomingAppointmentsErrors];
+
+export type GetUpcomingAppointmentsResponses = {
+    /**
+     * Successful Response
+     */
+    200: Array<AppointmentResponse>;
+};
+
+export type GetUpcomingAppointmentsResponse = GetUpcomingAppointmentsResponses[keyof GetUpcomingAppointmentsResponses];
+
+export type GetPastAppointmentsData = {
+    body?: never;
+    path?: never;
+    query: {
+        page: number;
+        limit: number;
+        user_id?: number;
+        barber_id?: number;
+    };
+    url: '/api/v1/appointments/past';
+};
+
+export type GetPastAppointmentsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+    /**
+     * Internal Server Error
+     */
+    500: ErrorResponse;
+};
+
+export type GetPastAppointmentsError = GetPastAppointmentsErrors[keyof GetPastAppointmentsErrors];
+
+export type GetPastAppointmentsResponses = {
+    /**
+     * Successful Response
+     */
+    200: Array<AppointmentResponse>;
+};
+
+export type GetPastAppointmentsResponse = GetPastAppointmentsResponses[keyof GetPastAppointmentsResponses];
 
 export type DeleteAppointmentApiV1AppointmentsAppointmentIdDeleteData = {
     body?: never;

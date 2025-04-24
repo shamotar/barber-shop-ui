@@ -1,9 +1,8 @@
-import { Alert, Box, Snackbar } from "@mui/material";
-import { ReactNode, useState } from "react";
+import { Box } from "@mui/material";
+import { ReactNode } from "react";
 import Navbar, { NavItemsType } from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useKeycloak } from "../hooks/useKeycloak";
-import { SnackBarProvider } from "../context/SnackBarContext";
 
 type BaseProps = {
   children: ReactNode;
@@ -30,6 +29,14 @@ export default function Base({ children }: BaseProps) {
       link: "/services",
     },
   ];
+  if (authenticated) {
+    navItems.push(
+      {
+        name: "Appointments",
+        link: "/appointments",
+      },
+    );
+  }
   const isBarber = keycloak.hasRealmRole("barber")
   const barberNavItems: NavItemsType[] = [
     {

@@ -6,6 +6,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import BookingDetails from "../components/BookingDetails";
 import { deleteAppointment } from "../effects/appointment";
 import { useKeycloak } from "../hooks/useKeycloak";
+import { useSnackBar } from "../context/SnackbarContext";
 
 
 export default function Appointment() {
@@ -15,6 +16,7 @@ export default function Appointment() {
   }
   const appointmentId = useParams().appointmentId;
   const navigate = useNavigate();
+  const { showSnackBar } = useSnackBar();
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
@@ -32,13 +34,14 @@ export default function Appointment() {
         keycloak.token ? keycloak.token : "",
         parseInt(appointmentId!)
       )
+      showSnackBar("Appointment cancelled successfully", "success");
       setDeleteDialogOpen(false);
     } catch (error) {
       console.error("Error deleting appointment:", error);
     } finally {
       setDeleteDialogOpen(false);
     }
-    navigate("/");
+    navigate("/appointments");
   };
 
   return (

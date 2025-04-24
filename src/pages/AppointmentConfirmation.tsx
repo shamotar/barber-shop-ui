@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router";
 import Base from "./Base";
-import { Box, Button, Divider, Paper, Typography } from "@mui/material";
+import { Box, Button, Divider, Paper, Stack, Typography } from "@mui/material";
 import BookingDetails from "../components/BookingDetails";
 
 export default function AppointmentConfirmation() {
@@ -30,15 +30,28 @@ export default function AppointmentConfirmation() {
 
             <Divider sx={{ my: 2 }} />
 
-            {/* Back to Home Button */}
-            <Button
-              variant="contained"
-              color="primary"
-              fullWidth
-              onClick={handleBackToHome}
-            >
-              Back to Home
-            </Button>
+            {/* Manage booking Button */}
+            <Stack spacing={2} sx={{ mb: 2 }}>
+
+              <Button
+                variant="outlined"
+                color="primary"
+                fullWidth
+                onClick={() => navigate(`/appointments/${appointmentId}`)}
+              >
+                Manage Booking
+              </Button>
+
+              {/* Back to Home Button */}
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                onClick={handleBackToHome}
+              >
+                Back to Home
+              </Button>
+            </Stack>
           </Paper>
         </Box>
       }
