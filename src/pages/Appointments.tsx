@@ -9,6 +9,7 @@ import {
   ListItemText,
   Button,
   CircularProgress,
+  Stack,
 } from "@mui/material";
 import { useKeycloak } from "../hooks/useKeycloak";
 import { fetchAppointments } from "../effects/appointment"; // Replace with your actual API call
@@ -20,7 +21,7 @@ import { useSnackBar } from "../context/SnackbarContext";
 
 export default function Appointments() {
   const { keycloak } = useKeycloak();
-  const { user } = useMe();
+  const { user, barberId } = useMe();
   if (!user) {
     return null; // Handle case where user is not available
   }
@@ -39,14 +40,37 @@ export default function Appointments() {
       if (!keycloak?.token) return;
       try {
         setLoading(true);
-        const data = await fetchAppointments(keycloak.token, pastPage, currentLimit, user.user_id, undefined, true, undefined);
+        console.log("Barber ID:", barberId);
+        const data = await fetchAppointments(keycloak.token, pastPage, currentLimit, user.user_id, barberId, true, undefined);
         if (!data) {
           throw new Error("Failed to load appointments. Please try again later.");
         }
         // Set appointments
         const newAppointments = data.filter((appt) => !upcomingAppointments.some((a) => a.appointment_id === appt.appointment_id));
         setUpcomingAppointments((prev) => [...prev, ...newAppointments]);
-        console.log("Appointments fetched:", upcomingAppointments);
+      } catch (error) {
+        showSnackBar("Failed to load appointments. Please try again later.", "error");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [upcomingPage]);
+
+
+  // State to hold past appointments
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!keycloak?.token) return;
+      try {
+        setLoading(true);
+        const data = await fetchAppointments(keycloak.token, pastPage, currentLimit, user.user_id, barberId, undefined, true);
+        if (!data) {
+          throw new Error("Failed to load appointments. Please try again later.");
+        }
+        // Set appointments
+        const newAppointments = data.filter((appt) => !upcomingAppointments.some((a) => a.appointment_id === appt.appointment_id));
+        setPastAppointments((prev) => [...prev, ...newAppointments]);
       } catch (error) {
         showSnackBar("Failed to load appointments. Please try again later.", "error");
       } finally {
@@ -55,14 +79,6 @@ export default function Appointments() {
     };
     fetchData();
   }, [pastPage]);
-
-  useEffect(() => {
-    const now = new Date();
-    const past = appointments.filter((appt) => new Date(appt.appointment_date) < now);
-    const upcoming = appointments.filter((appt) => new Date(appt.appointment_date) >= now);
-    setPastAppointments(past);
-    setUpcomingAppointments(upcoming);
-  }, [appointments]);
 
   const getBarberName = (user: UserBase) => {
     if (user.firstName && user.lastName) {
@@ -85,9 +101,18 @@ export default function Appointments() {
   return (
     <Base>
       <Box sx={{ maxWidth: 800, mx: "auto", mt: 4, p: 2 }}>
-        <Typography variant="h4" gutterBottom>
-          My Appointments
-        </Typography>
+        <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between" sx={{ mb: 4 }}>
+          <Typography variant="h4">
+            My Appointments
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => navigate("/book-appointment")}
+          >
+            Book New Appointment
+          </Button>
+        </Stack>
 
         {loading ? (
           <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
@@ -126,7 +151,7 @@ export default function Appointments() {
                     variant="contained"
                     color="primary"
                     fullWidth
-                    onClick={() => setCurrentPage((prev) => prev + 1)}
+                    onClick={() => setUpcomingPage((prev) => prev + 1)}
                   >
                     Load More
                   </Button>
@@ -145,16 +170,27 @@ export default function Appointments() {
               </Typography>
               <Divider sx={{ mb: 2 }} />
               {pastAppointments.length > 0 ? (
-                <List>
-                  {pastAppointments.map((appt) => (
-                    <ListItem key={appt.appointment_id}>
-                      <ListItemText
-                        primary={`${getBarberName(appt.barber.user)} - ${new Date(appt.appointment_date).toLocaleDateString()} at ${parseTime(appt.time_slots[0])}`}
-                        secondary="Completed"
-                      />
-                    </ListItem>
-                  ))}
-                </List>
+                <Box>
+                  <List>
+                    {pastAppointments.map((appt) => (
+                      <ListItem key={appt.appointment_id}>
+                        <ListItemText
+                          primary={`${getBarberName(appt.barber.user)} - ${new Date(appt.appointment_date).toLocaleDateString()} at ${parseTime(appt.time_slots[0])}`}
+                          secondary="Completed"
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                  <Divider sx={{ my: 2 }} />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    onClick={() => setPastPage((prev) => prev + 1)}
+                  >
+                    Load More
+                  </Button>
+                </Box>
               ) : (
                 <Typography variant="body1" color="textSecondary">
                   No past appointments.

@@ -42,12 +42,6 @@ export type BodyLoginApiV1AuthLoginPost = {
     password: string;
 };
 
-export type EmailSchema = {
-    email: string;
-    subject: string;
-    body: string;
-};
-
 export type ErrorResponse = {
     detail: string;
 };
@@ -236,33 +230,6 @@ export type LoginApiV1AuthLoginPostResponses = {
 };
 
 export type LoginApiV1AuthLoginPostResponse = LoginApiV1AuthLoginPostResponses[keyof LoginApiV1AuthLoginPostResponses];
-
-export type SendEmailApiV1EmailSendPostData = {
-    body: EmailSchema;
-    path?: never;
-    query?: never;
-    url: '/api/v1/email/send';
-};
-
-export type SendEmailApiV1EmailSendPostErrors = {
-    /**
-     * Validation Error
-     */
-    422: HttpValidationError;
-    /**
-     * An error occurred while sending the email.
-     */
-    500: ErrorResponse;
-};
-
-export type SendEmailApiV1EmailSendPostError = SendEmailApiV1EmailSendPostErrors[keyof SendEmailApiV1EmailSendPostErrors];
-
-export type SendEmailApiV1EmailSendPostResponses = {
-    /**
-     * Email has been sent successfully.
-     */
-    200: unknown;
-};
 
 export type GetUsersApiV1UsersGetData = {
     body?: never;
@@ -597,6 +564,37 @@ export type GetBarberByIdApiV1BarbersBarberIdGetResponses = {
 };
 
 export type GetBarberByIdApiV1BarbersBarberIdGetResponse = GetBarberByIdApiV1BarbersBarberIdGetResponses[keyof GetBarberByIdApiV1BarbersBarberIdGetResponses];
+
+export type GetBarberByUserIdData = {
+    body?: never;
+    path: {
+        user_id: number;
+    };
+    query?: never;
+    url: '/api/v1/barbers/user/{user_id}';
+};
+
+export type GetBarberByUserIdErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+    /**
+     * Internal Server Error
+     */
+    500: ErrorResponse;
+};
+
+export type GetBarberByUserIdError = GetBarberByUserIdErrors[keyof GetBarberByUserIdErrors];
+
+export type GetBarberByUserIdResponses = {
+    /**
+     * Successful Response
+     */
+    200: BarberResponse;
+};
+
+export type GetBarberByUserIdResponse = GetBarberByUserIdResponses[keyof GetBarberByUserIdResponses];
 
 export type GetAllServicesApiV1ServicesGetData = {
     body?: never;
