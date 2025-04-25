@@ -18,30 +18,42 @@ import { AppointmentResponse, TimeSlotChildResponse, UserBase } from "../api";
 import Base from "./Base";
 import { useNavigate } from "react-router";
 import { useSnackBar } from "../context/SnackbarContext";
+import { checkUserRole } from "../common/roleChecking";
 
 export default function Appointments() {
   const { keycloak } = useKeycloak();
-  const { user, barberId } = useMe();
-  if (!user) {
+  const { user, loading } = useMe();
+  if (!user || !keycloak || loading) {
     return null; // Handle case where user is not available
   }
+
   const { showSnackBar } = useSnackBar();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+
+  const [isBarber, setIsBarber] = useState(false);
+  const [loadingHere, setloadingHere] = useState(true);
   const [pastAppointments, setPastAppointments] = useState<AppointmentResponse[]>([]);
   const [pastPage, setPastPage] = useState(1);
   const [upcomingAppointments, setUpcomingAppointments] = useState<AppointmentResponse[]>([]);
   const [upcomingPage, setUpcomingPage] = useState(1);
   const [currentLimit] = useState(10);
 
+  // Check if the user is a barber
+  useEffect(() => {
+    if (keycloak) {
+      const isBarber = checkUserRole(keycloak, "barber");
+      setIsBarber(isBarber);
+    }
+  }, [keycloak]);
+
   // State to hold upcoming appointments
   useEffect(() => {
     const fetchData = async () => {
-      if (!keycloak?.token) return;
+      if (!keycloak?.token || loading) return;
       try {
-        setLoading(true);
-        console.log("Barber ID:", barberId);
-        const data = await fetchAppointments(keycloak.token, pastPage, currentLimit, user.user_id, barberId, true, undefined);
+        setloadingHere(true);
+        const isBarber = checkUserRole(keycloak, "barber");
+        const data = await fetchAppointments(keycloak.token, upcomingPage, currentLimit, isBarber, user.user_id, true, undefined);
         if (!data) {
           throw new Error("Failed to load appointments. Please try again later.");
         }
@@ -51,7 +63,7 @@ export default function Appointments() {
       } catch (error) {
         showSnackBar("Failed to load appointments. Please try again later.", "error");
       } finally {
-        setLoading(false);
+        setloadingHere(false);
       }
     };
     fetchData();
@@ -61,10 +73,11 @@ export default function Appointments() {
   // State to hold past appointments
   useEffect(() => {
     const fetchData = async () => {
-      if (!keycloak?.token) return;
+      if (!keycloak?.token || loading) return;
       try {
-        setLoading(true);
-        const data = await fetchAppointments(keycloak.token, pastPage, currentLimit, user.user_id, barberId, undefined, true);
+        setloadingHere(true);
+        const isBarber = checkUserRole(keycloak, "barber");
+        const data = await fetchAppointments(keycloak.token, pastPage, currentLimit, isBarber, user.user_id, undefined, true);
         if (!data) {
           throw new Error("Failed to load appointments. Please try again later.");
         }
@@ -74,17 +87,17 @@ export default function Appointments() {
       } catch (error) {
         showSnackBar("Failed to load appointments. Please try again later.", "error");
       } finally {
-        setLoading(false);
+        setloadingHere(false);
       }
     };
     fetchData();
   }, [pastPage]);
 
-  const getBarberName = (user: UserBase) => {
+  const getUserName = (user: UserBase) => {
     if (user.firstName && user.lastName) {
       return `${user.firstName} ${user.lastName}`;
     }
-    return "Unknown Barber";
+    return "Unknown User";
   }
 
   const parseTime = (slot: TimeSlotChildResponse) => {
@@ -94,8 +107,16 @@ export default function Appointments() {
     return timeString;
   }
 
-  if (!keycloak) {
-    return null;
+  const parseAppointmentDetails = (appointment: AppointmentResponse) => {
+    const barberName = getUserName(appointment.barber.user);
+    const userName = getUserName(appointment.user);
+    const appointmentDate = new Date(appointment.appointment_date);
+    const formattedDate = appointmentDate.toLocaleDateString();
+    const formattedTime = parseTime(appointment.time_slots[0]);
+    if (isBarber) {
+      return `${userName} - ${formattedDate} at ${formattedTime}`;
+    }
+    return `${barberName} - ${formattedDate} at ${formattedTime}`;
   }
 
   return (
@@ -114,7 +135,7 @@ export default function Appointments() {
           </Button>
         </Stack>
 
-        {loading ? (
+        {loadingHere ? (
           <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
             <CircularProgress />
           </Box>
@@ -140,7 +161,7 @@ export default function Appointments() {
                         </Button>
                       }>
                         <ListItemText
-                          primary={`${getBarberName(appt.barber.user)} - ${new Date(appt.appointment_date).toLocaleDateString()} at ${parseTime(appt.time_slots[0])}`}
+                          primary={parseAppointmentDetails(appt)}
                           secondary="Upcoming"
                         />
                       </ListItem>
@@ -175,7 +196,7 @@ export default function Appointments() {
                     {pastAppointments.map((appt) => (
                       <ListItem key={appt.appointment_id}>
                         <ListItemText
-                          primary={`${getBarberName(appt.barber.user)} - ${new Date(appt.appointment_date).toLocaleDateString()} at ${parseTime(appt.time_slots[0])}`}
+                          primary={parseAppointmentDetails(appt)}
                           secondary="Completed"
                         />
                       </ListItem>

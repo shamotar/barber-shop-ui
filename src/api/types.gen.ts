@@ -975,7 +975,7 @@ export type GetUpcomingAppointmentsData = {
         page: number;
         limit: number;
         user_id?: number;
-        barber_id?: number;
+        is_barber?: boolean;
     };
     url: '/api/v1/appointments/upcoming';
 };
@@ -1009,7 +1009,7 @@ export type GetPastAppointmentsData = {
         page: number;
         limit: number;
         user_id?: number;
-        barber_id?: number;
+        is_barber?: boolean;
     };
     url: '/api/v1/appointments/past';
 };

@@ -29,8 +29,8 @@ export async function fetchAppointments(
   authToken: string,
   page: number,
   limit: number,
+  isBarber: boolean,
   userId?: number,
-  barberId?: number,
   upcoming?: boolean,
   past?: boolean
 ): Promise<AppointmentResponse[]> {
@@ -41,7 +41,7 @@ export async function fetchAppointments(
     page,
     limit,
     user_id: userId,
-    barber_id: barberId,
+    is_barber: isBarber,
   };
   try {
     if (upcoming) {
