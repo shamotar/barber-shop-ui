@@ -26,13 +26,13 @@ import { BarberResponse, createAppointmentApiV1AppointmentsPost, getAllBarbersAp
 import { fetchServices, Service } from "../effects/services";
 import { getSchedules, Schedule, TimeSlot } from "../effects/schedule";
 import { AppointmentStatus } from "../api/types.gen";
-import BookingConfirmation from "../components/BookingConfirmation"
 import { useNavigate } from "react-router";
+import { useMe } from "../hooks/useMe";
 
 const Booking = () => {
-  const navigate = useNavigate();
   const { keycloak } = useKeycloak();
-  if (!keycloak) {
+  const { user } = useMe();
+  if (!keycloak || !user) {
     // Keycloak is not initialized yet, return null or a loading spinner
     return <div>Loading...</div>;
   }
@@ -51,6 +51,7 @@ const Booking = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
+  const navigate = useNavigate();
 
   const today = new Date();
   // Set max date to 7 days from today
@@ -246,7 +247,7 @@ const Booking = () => {
 
     // Proceed with the appointment confirmation
     const appointmentData = {
-      user_id: 1, // Replace with the actual user ID
+      user_id: user.user_id,
       barber_id: selectedBarber.barber_id,
       status: "pending" as AppointmentStatus,
       time_slot: selectedTimeSlotsData.map((slot) => slot.id),

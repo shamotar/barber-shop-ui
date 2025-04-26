@@ -5,7 +5,7 @@
 
 import { createContext, useEffect, useState } from "react"
 import { useKeycloak } from "../hooks/useKeycloak"
-import { getCurrentUserApiV1UsersMeGet, UserResponse } from "../api"
+import { getBarberByUserId, getCurrentUserApiV1UsersMeGet, UserResponse } from "../api"
 
 interface MeContextType {
     user: UserResponse | undefined;

@@ -42,12 +42,6 @@ export type BodyLoginApiV1AuthLoginPost = {
     password: string;
 };
 
-export type EmailSchema = {
-    email: string;
-    subject: string;
-    body: string;
-};
-
 export type ErrorResponse = {
     detail: string;
 };
@@ -238,33 +232,6 @@ export type LoginApiV1AuthLoginPostResponses = {
 };
 
 export type LoginApiV1AuthLoginPostResponse = LoginApiV1AuthLoginPostResponses[keyof LoginApiV1AuthLoginPostResponses];
-
-export type SendEmailApiV1EmailSendPostData = {
-    body: EmailSchema;
-    path?: never;
-    query?: never;
-    url: '/api/v1/email/send';
-};
-
-export type SendEmailApiV1EmailSendPostErrors = {
-    /**
-     * Validation Error
-     */
-    422: HttpValidationError;
-    /**
-     * An error occurred while sending the email.
-     */
-    500: ErrorResponse;
-};
-
-export type SendEmailApiV1EmailSendPostError = SendEmailApiV1EmailSendPostErrors[keyof SendEmailApiV1EmailSendPostErrors];
-
-export type SendEmailApiV1EmailSendPostResponses = {
-    /**
-     * Email has been sent successfully.
-     */
-    200: unknown;
-};
 
 export type GetUsersApiV1UsersGetData = {
     body?: never;
@@ -640,6 +607,37 @@ export type GetBarberByIdApiV1BarbersBarberIdGetResponses = {
 
 export type GetBarberByIdApiV1BarbersBarberIdGetResponse = GetBarberByIdApiV1BarbersBarberIdGetResponses[keyof GetBarberByIdApiV1BarbersBarberIdGetResponses];
 
+export type GetBarberByUserIdData = {
+    body?: never;
+    path: {
+        user_id: number;
+    };
+    query?: never;
+    url: '/api/v1/barbers/user/{user_id}';
+};
+
+export type GetBarberByUserIdErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+    /**
+     * Internal Server Error
+     */
+    500: ErrorResponse;
+};
+
+export type GetBarberByUserIdError = GetBarberByUserIdErrors[keyof GetBarberByUserIdErrors];
+
+export type GetBarberByUserIdResponses = {
+    /**
+     * Successful Response
+     */
+    200: BarberResponse;
+};
+
+export type GetBarberByUserIdResponse = GetBarberByUserIdResponses[keyof GetBarberByUserIdResponses];
+
 export type GetAllServicesApiV1ServicesGetData = {
     body?: never;
     path?: never;
@@ -955,6 +953,8 @@ export type GetAppointmentsApiV1AppointmentsGetData = {
     query: {
         page: number;
         limit: number;
+        user_id?: number;
+        barber_id?: number;
     };
     url: '/api/v1/appointments';
 };
@@ -1009,6 +1009,74 @@ export type CreateAppointmentApiV1AppointmentsPostResponses = {
 };
 
 export type CreateAppointmentApiV1AppointmentsPostResponse = CreateAppointmentApiV1AppointmentsPostResponses[keyof CreateAppointmentApiV1AppointmentsPostResponses];
+
+export type GetUpcomingAppointmentsData = {
+    body?: never;
+    path?: never;
+    query: {
+        page: number;
+        limit: number;
+        user_id?: number;
+        is_barber?: boolean;
+    };
+    url: '/api/v1/appointments/upcoming';
+};
+
+export type GetUpcomingAppointmentsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+    /**
+     * Internal Server Error
+     */
+    500: ErrorResponse;
+};
+
+export type GetUpcomingAppointmentsError = GetUpcomingAppointmentsErrors[keyof GetUpcomingAppointmentsErrors];
+
+export type GetUpcomingAppointmentsResponses = {
+    /**
+     * Successful Response
+     */
+    200: Array<AppointmentResponse>;
+};
+
+export type GetUpcomingAppointmentsResponse = GetUpcomingAppointmentsResponses[keyof GetUpcomingAppointmentsResponses];
+
+export type GetPastAppointmentsData = {
+    body?: never;
+    path?: never;
+    query: {
+        page: number;
+        limit: number;
+        user_id?: number;
+        is_barber?: boolean;
+    };
+    url: '/api/v1/appointments/past';
+};
+
+export type GetPastAppointmentsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+    /**
+     * Internal Server Error
+     */
+    500: ErrorResponse;
+};
+
+export type GetPastAppointmentsError = GetPastAppointmentsErrors[keyof GetPastAppointmentsErrors];
+
+export type GetPastAppointmentsResponses = {
+    /**
+     * Successful Response
+     */
+    200: Array<AppointmentResponse>;
+};
+
+export type GetPastAppointmentsResponse = GetPastAppointmentsResponses[keyof GetPastAppointmentsResponses];
 
 export type DeleteAppointmentApiV1AppointmentsAppointmentIdDeleteData = {
     body?: never;
