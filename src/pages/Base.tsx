@@ -28,6 +28,10 @@ export default function Base({ children }: BaseProps) {
       name: "Services",
       link: "/services",
     },
+    {
+      name: "Messaging",
+      link: "/messaging",
+    },
   ];
   if (authenticated) {
     navItems.push(
