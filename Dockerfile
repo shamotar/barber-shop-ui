@@ -1,19 +1,14 @@
 
-    FROM node:22-alpine AS base
+    FROM node:22-alpine AS builder
     WORKDIR /app
-
     COPY package*.json ./
     RUN npm ci --no-audit --no-fund
-    
-
-    FROM base AS dev
-
     COPY . .
-    
+    RUN npm run build          # → /app/dist
 
-    ENV HOST 0.0.0.0
-    EXPOSE 5173
-    
 
-    CMD ["npm","run","dev"]
-    
+    FROM caddy:2-alpine
+    COPY --from=builder /app/dist /srv    # static files
+
+    RUN printf ':status 200\nroot * /srv\nfile_server\n' > /etc/caddy/Caddyfile
+    EXPOSE 80
