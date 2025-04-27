@@ -3,15 +3,21 @@ services:
     build: .
     container_name: barber-shop-ui
     ports:
-      - "5173:5173"
-    working_dir: /app
+      - "5173:5173"    # keep for local dev & for the proxy target
+    # … rest unchanged …
+    networks: [barber-shop-network]
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy
+    depends_on:
+      - barber-shop-ui
+    ports:
+      - "80:80"        
+      - "5173:5173"    
     volumes:
-      - ./:/app            
-      - /app/node_modules  
-    env_file:
-      - .env    
-    networks:
-      - barber-shop-network
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    networks: [barber-shop-network]
 
 networks:
   barber-shop-network:

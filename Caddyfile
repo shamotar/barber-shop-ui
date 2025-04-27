@@ -1,0 +1,9 @@
+
+:80 {
+	# Forward every request to the Vite dev server inside the ui container
+	reverse_proxy barber-shop-ui:5173
+}
+
+:5173 {
+	redir http://18.188.49.24{uri} 308
+}
