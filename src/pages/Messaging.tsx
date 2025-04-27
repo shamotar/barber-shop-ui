@@ -229,8 +229,7 @@ const handleSendMessage = async (e: FormEvent) => {
     body: {
       thread_id: activeThread.thread_id,
       hasActiveMessage: false, // You can update this flag as necessary
-      text: newMessageText.trim(),
-      sender_id: userId!
+      text: newMessageText.trim()
     }
   });
 
@@ -362,7 +361,7 @@ const handleSendMessage = async (e: FormEvent) => {
                   sx={{ flex: 1, overflowY: 'auto', minHeight: 0, maxHeight: '100%', mb: 2 }}
                 >
                   {messages.map((msg) => {
-                    const isOwn = msg.sender_id === userId;
+                    const isOwn = true;
                     return (
                       <Box
                         key={msg.message_id}
