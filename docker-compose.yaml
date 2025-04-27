@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   barber-shop-ui:
     build: .
