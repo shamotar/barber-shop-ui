@@ -4,6 +4,3 @@
 	reverse_proxy barber-shop-ui:5173
 }
 
-:5173 {
-	redir http://18.188.49.24{uri} 308
-}
