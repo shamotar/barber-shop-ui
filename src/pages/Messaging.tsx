@@ -229,8 +229,8 @@ const handleSendMessage = async (e: FormEvent) => {
     body: {
       thread_id: activeThread.thread_id,
       hasActiveMessage: false, // You can update this flag as necessary
-      text: newMessageText.trim()
-      // Deleted msg.sender.id
+      text: newMessageText.trim(),
+      sender_id: userId
     }
   });
 
