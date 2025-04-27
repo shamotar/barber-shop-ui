@@ -15,7 +15,6 @@ export type CreateClientConfig<T extends DefaultClientOptions = ClientOptions> =
 
 export const client = createClient(
     createConfig<ClientOptions>({
-      // falls back to localhost only if the env var is missing
       baseUrl: import.meta.env.VITE_API_HOST ?? 'http://localhost:8000',
     }),
   );
