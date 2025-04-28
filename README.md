@@ -1,39 +1,45 @@
-# Material UI - Vite.js in TypeScript example
+# Barber Shop UI
 
-## How to use
+This project is the user interface for the Barbershop application.
 
-Download the example [or clone the repo](https://github.com/mui/material-ui):
+## Starting the Docker Containers
 
-<!-- #repo-reference -->
+To run the Barber Shop API project using Docker, follow these steps:
 
-```bash
-curl https://codeload.github.com/mui/material-ui/tar.gz/master | tar -xz --strip=2 material-ui-master/examples/material-ui-vite-ts
-cd material-ui-vite-ts
-```
+### Prerequisites
 
-Install it and run:
+Ensure you have the following installed on your system:
+- [Docker](https://www.docker.com/products/docker-desktop/) (For containerization)
+- [Docker Compose](https://docs.docker.com/compose/) (For managing multi-container applications)
 
-```bash
-npm install
-npm run dev
-```
+### Steps to Start the Containers
 
-or:
+1. **Clone the Repository**:
+   If you haven't already, clone the repository to your local machine:
+   ```bash
+   git clone https://github.com/shamotar/barber-shop-ui.git
+   cd barber-shop-ui
+   ```
+2. **Start the Containers**:
+    Use Docker Compose to start all the services:
+    ```bash
+    docker-compose up --build
+    ```
 
-<!-- #repo-reference -->
+3. **Access the web app**:
+    - The UI is located at <http://localhost:5173>
 
-[![Edit on StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/mui/material-ui/tree/master/examples/material-ui-vite-ts)
+## Different Personas
 
-[![Edit on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/p/sandbox/github/mui/material-ui/tree/master/examples/material-ui-vite-ts)
+- **Barber**:
+    - To login as a barber use the following credentials:
+        - **Username**: `john.doe@example.com`
+        - **Password**: `hashedpassword1`
 
-## The idea behind the example
+- **Client**:
 
-This example uses [Vite.js](https://github.com/vitejs/vite).
-It includes `@mui/material` and its peer dependencies, including [Emotion](https://emotion.sh/docs/introduction), the default style engine in Material UI v6.
-
-## What's next?
-
-<!-- #host-reference -->
-
-You now have a working example project.
-You can head back to the documentation and continue by browsing the [templates](https://next.mui.com/material-ui/getting-started/templates/) section.
+    There are two different ways to impersonate a client:
+    1. To login as a client use the following credentials:
+        - **Username**: `jane.smith@example.com`
+        - **Password**: `hashedpassword2`
+    2. Sign up as a new user at <http://localhost:5173/signup>
