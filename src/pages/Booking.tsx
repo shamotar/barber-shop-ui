@@ -26,13 +26,13 @@ import { BarberResponse, createAppointmentApiV1AppointmentsPost, getAllBarbersAp
 import { fetchServices, Service } from "../effects/services";
 import { getSchedules, Schedule, TimeSlot } from "../effects/schedule";
 import { AppointmentStatus } from "../api/types.gen";
+import BookingConfirmation from "../components/BookingConfirmation"
 import { useNavigate } from "react-router";
-import { useMe } from "../hooks/useMe";
 
 const Booking = () => {
+  const navigate = useNavigate();
   const { keycloak } = useKeycloak();
-  const { user } = useMe();
-  if (!keycloak || !user) {
+  if (!keycloak) {
     // Keycloak is not initialized yet, return null or a loading spinner
     return <div>Loading...</div>;
   }
@@ -51,7 +51,6 @@ const Booking = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
-  const navigate = useNavigate();
 
   const today = new Date();
   // Set max date to 7 days from today
@@ -125,7 +124,7 @@ const Booking = () => {
     }
   };
 
-  const handleServiceChange = async (event: SelectChangeEvent) => {
+  const handleServiceChange = (event: SelectChangeEvent<string[]>) => { // <-- Updated to match line 345
     const {
       target: { value },
     } = event;
@@ -247,7 +246,7 @@ const Booking = () => {
 
     // Proceed with the appointment confirmation
     const appointmentData = {
-      user_id: user.user_id,
+      user_id: 1, // Replace with the actual user ID
       barber_id: selectedBarber.barber_id,
       status: "pending" as AppointmentStatus,
       time_slot: selectedTimeSlotsData.map((slot) => slot.id),
@@ -340,13 +339,13 @@ const Booking = () => {
                   <CircularProgress />
                 ) : (<FormControl fullWidth>
                   <InputLabel id="services-select-label">Select service(s)</InputLabel>
-                  <Select
+                  <Select<string[]>
                     labelId="services-select-label"
                     id="services-select"
-                    multiple
-                    value={selectedServices} // Not sure why this is typing is not working
+                    multiple //< -- Multiple requires an array
+                    value={selectedServices}
                     label="Select service(s)"
-                    onChange={(e: SelectChangeEvent) => handleServiceChange(e)}
+                    onChange={(e: SelectChangeEvent<string[]>) => handleServiceChange(e)}
                     input={<OutlinedInput label="Select service(s)" />}
                   >
                     {services.map((service) => (
