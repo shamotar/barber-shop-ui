@@ -31,7 +31,7 @@ export function useUserSearch(
         }
         setLoading(true);
         try {
-          const url = new URL(`http://localhost:8000/api/v1/users/search`);
+          const url = new URL(`/api/v1/users/search`, window.location.origin);
           url.searchParams.set('q', q);
           url.searchParams.set('page', String(page));
           url.searchParams.set('limit', String(limit));
