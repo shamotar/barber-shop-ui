@@ -9,6 +9,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
+# --- copy env file so Vite can read it
+COPY .env .env
 
 COPY . .
 RUN npm run build          # outputs to /app/dist
