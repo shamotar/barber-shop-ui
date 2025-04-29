@@ -4,8 +4,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
-RUN npm run build            # → dist/
+RUN npm run build         
 
 # runtime
 FROM caddy:2-alpine
-COPY --from=builder /app/dist /srv  # Caddy serves /srv by default
+COPY --from=builder /app/dist /srv 
