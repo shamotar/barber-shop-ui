@@ -1,9 +1,4 @@
-import React, {
-  createContext,
-  useEffect,
-  useState,
-  useRef,
-} from 'react'
+import React, { createContext, useEffect, useState, useRef } from 'react'
 import Keycloak from 'keycloak-js'
 
 interface KeycloakContextProps {
@@ -11,9 +6,7 @@ interface KeycloakContextProps {
   authenticated: boolean
 }
 
-const KeycloakContext = createContext<KeycloakContextProps | undefined>(
-  undefined,
-)
+const KeycloakContext = createContext<KeycloakContextProps | undefined>(undefined)
 
 interface KeycloakProviderProps {
   children: React.ReactNode
@@ -26,24 +19,22 @@ const KeycloakProvider: React.FC<KeycloakProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (isRun.current) return
-
     isRun.current = true
 
     const initKeycloak = async () => {
+      // Hard-coded Keycloak configuration for production
       const keycloakConfig = {
-        url: import.meta.env.VITE_KEYCLOAK_URL as string,
-        realm: import.meta.env.VITE_KEYCLOAK_REALM as string,
-        clientId: import.meta.env.VITE_KEYCLOAK_CLIENT as string,
+        url: 'https://barbershop-app.duckdns.org/keycloak/',
+        realm: 'barbershop',
+        clientId: 'barbershop-front-end-client',
       }
       console.log('keycloakConfig', keycloakConfig)
       const keycloakInstance: Keycloak = new Keycloak(keycloakConfig)
 
       keycloakInstance
-        .init({
-          onLoad: 'check-sso',
-        })
-        .then((authenticated: boolean) => {
-          setAuthenticated(authenticated)
+        .init({ onLoad: 'check-sso' })
+        .then((auth: boolean) => {
+          setAuthenticated(auth)
         })
         .catch((error) => {
           console.error('Keycloak initialization failed:', error)
