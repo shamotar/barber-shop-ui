@@ -22,27 +22,25 @@ const KeycloakProvider: React.FC<KeycloakProviderProps> = ({ children }) => {
     isRun.current = true
 
     const initKeycloak = async () => {
-      // Hard-coded Keycloak configuration for production
+      // ---- Hard-coded Keycloak configuration ----
       const keycloakConfig = {
-        url: 'https://barbershop-app.duckdns.org/keycloak/',
+        'auth-server-url': 'https://barbershop-app.duckdns.org/auth',
         realm: 'barbershop',
-        clientId: 'barbershop-front-end-client',
-      }
-      console.log('keycloakConfig', keycloakConfig)
-      const keycloakInstance: Keycloak = new Keycloak(keycloakConfig)
+        resource: 'barbershop-front-end-client',
+      };
+      console.log('🔑 keycloakConfig', keycloakConfig)
 
+      const keycloakInstance: Keycloak = new Keycloak(keycloakConfig)
       keycloakInstance
         .init({ onLoad: 'check-sso' })
-        .then((auth: boolean) => {
-          setAuthenticated(auth)
-        })
+        .then((auth: boolean) => setAuthenticated(auth))
         .catch((error) => {
-          console.error('Keycloak initialization failed:', error)
+          console.error('Keycloak init failed:', error)
           setAuthenticated(false)
         })
         .finally(() => {
           setKeycloak(keycloakInstance)
-          console.log('keycloak', keycloakInstance)
+          console.log('🗝 keycloak instance', keycloakInstance)
         })
     }
 
