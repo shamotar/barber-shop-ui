@@ -17,7 +17,7 @@ import { useMe } from "../hooks/useMe";
 import { AppointmentResponse, TimeSlotChildResponse, UserBase } from "../api";
 import Base from "./Base";
 import { useNavigate } from "react-router";
-import { useSnackBar } from "../context/SnackbarContext";
+import { useSnackBar } from "../context/SnackBarContext";
 import { checkUserRole } from "../common/roleChecking";
 
 export default function Appointments() {

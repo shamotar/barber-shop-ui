@@ -18,7 +18,7 @@ import Appointment from './pages/Appointment';
 import Appointments from './pages/Appointments';
 import { MeProvider } from './context/MeContext';
 import ProfileInfo from './pages/ProfileInfo';
-import { SnackBarProvider } from './context/SnackbarContext';
+import { SnackBarProvider } from './context/SnackBarContext';
 import UpdatePassword from './pages/UpdatePassword';
 import Messaging from './pages/Messaging';
 

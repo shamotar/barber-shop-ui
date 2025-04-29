@@ -6,7 +6,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import BookingDetails from "../components/BookingDetails";
 import { deleteAppointment } from "../effects/appointment";
 import { useKeycloak } from "../hooks/useKeycloak";
-import { useSnackBar } from "../context/SnackbarContext"; 
+import { useSnackBar } from "../context/SnackBarContext"; 
 
 ""
 export default function Appointment() {
